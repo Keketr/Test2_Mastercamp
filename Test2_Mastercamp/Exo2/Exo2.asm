@@ -9,18 +9,18 @@ __CONFIG _CONFIG1, _HS_OSC & _WDT_OFF & _PWRTE_OFF
 
 START:
     BSF STATUS, RP0
-    BCF TRISB, 4
+    BCF TRISB, 4 ; RB4 = output 
     BCF STATUS, RP0
 
     MOVLW 0x00
     MOVWF T0CON
-    MOVLW 0xFE 
+    MOVLW 0xFE ; Preload timer0 pour un overflow après 2 cycles
     MOVWF TMR0H
     MOVLW 0xFE
     MOVWF TMR0L
     BSF INTCON, TMR0IE
     BSF INTCON, GIE
-    BSF T0CON, TMR0ON
+    BSF T0CON, TMR0ON ; Start Timer0
 
 MAIN_LOOP:
     GOTO MAIN_LOOP
@@ -29,7 +29,7 @@ TIMER_INTERRUPT:
     BCF INTCON, TMR0IF
     BTG PORTB, 4
 
-    MOVWF TMR0H
+    MOVWF TMR0H ; Reload Timer0
     MOVWF TMR0L
     RETFIE
 
